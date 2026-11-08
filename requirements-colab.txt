@@ -1,0 +1,11 @@
+# Colab already has JAX with GPU support, NumPy and Matplotlib: do not reinstall them.
+# The Minari MuJoCo datasets were recorded with mujoco 3.2.3, which has no build for Colab's Python 3.13;
+# 3.2.6 is the closest version that installs there (newer versions, e.g. 4.x, may change the physics slightly).
+mujoco==3.2.6
+gymnasium>=1.0
+gymnasium-robotics>=1.3
+minari[hdf5,gcs,hf]>=0.5
+optax>=0.2
+pyyaml
+imageio
+pillow

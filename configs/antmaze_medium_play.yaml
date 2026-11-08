@@ -1,0 +1,43 @@
+# AntMaze, medium maze, "play" data: an 8-joint quadruped walking to a far goal. The data never walks from
+# the test start to the test goal, so the agent has to stitch trajectories together.
+# Rewards are relabeled for the test goal (D4RL-style). IQL: expectile 0.9 / beta 10 (official AntMaze values),
+# with a longer horizon (discount 0.995) and 2M steps.
+name: antmaze_medium_play
+dataset_id: D4RL/antmaze/medium-play-v2
+seeds: [0, 1, 2]
+
+task:
+  relabel_to_test_goal: true    # reward 1 within goal_radius of the TEST goal; the test goal is fixed at the cell center
+  reward_shift: -1.0
+  goal_radius: 0.45
+  cut_flips: null               # optional: end each episode K steps before the ant flips over
+  flip_terminal: false          # optional: make flips terminal with reward flip_penalty
+  flip_penalty: null            # null = -1 / (1 - discount)
+
+offline:
+  batch_size: 256
+  hidden_dim: 256
+  lr: 3.0e-4
+  actor_lr_schedule: cosine
+  bc_steps: 100000
+  iql_steps: 2000000
+  eval_every: 50000
+  eval_episodes: 20
+  final_episodes: 50
+  episodes_per_cell: 3
+  discount: 0.995
+  tau: 0.005
+  expectile: 0.9
+  beta: 10.0
+  max_weight: 100.0
+
+online:
+  online_steps: 1000000          # environment steps per seed
+  envs_per_seed: 8
+  chunk: 2000
+  updates_per_step: 1
+  explore_temperature: 0.3      # the learned policy std is ~0.3 per joint; full-size noise makes the ant flip often
+  reset_on_flip: true           # end an exploration episode when the ant flips (stored as a time-limit cut)
+  eval_every: 50000
+  eval_episodes: 20
+  final_episodes: 50

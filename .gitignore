@@ -1,0 +1,22 @@
+# Model checkpoints are large (tens of MB each): keep them on Drive, not in git
+checkpoints/
+*.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# MuJoCo / misc
+MUJOCO_LOG.TXT
+.DS_Store
+
+# Videos can be big; remove this line to commit them
+results/**/*.gif

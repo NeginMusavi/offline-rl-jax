@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "offrl"
+version = "0.3.1"
+description = "Offline RL (BC, IQL) and offline-to-online fine-tuning in JAX on MuJoCo and maze tasks"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "jax>=0.4.30",
+    "optax>=0.2",
+    "numpy",
+    "mujoco==3.2.6",
+    "gymnasium>=1.0",
+    "gymnasium-robotics>=1.3",
+    "minari[hdf5,gcs,hf]>=0.5",
+    "pyyaml",
+    "matplotlib",
+    "imageio",
+    "pillow",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["offrl*"]

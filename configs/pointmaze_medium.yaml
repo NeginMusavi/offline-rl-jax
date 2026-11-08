@@ -1,0 +1,34 @@
+# PointMaze, medium maze: a 2D ball navigating to a goal, from data that wanders between random goals.
+# Sparse reward (-1 per step, 0 and terminal at the goal), goal-conditioned (the goal is part of the state).
+# IQL hyperparameters: CORL's values for maze2d (expectile 0.7, beta 3).
+name: pointmaze_medium
+dataset_id: D4RL/pointmaze/medium-v2
+seeds: [0, 1, 2]
+
+task:
+  relabel_to_test_goal: false   # keep each episode's own goal (the data has goals all over the maze)
+  reward_shift: -1.0
+  goal_radius: 0.45
+  cut_flips: null
+  flip_terminal: false
+  flip_penalty: null
+
+offline:
+  batch_size: 256
+  hidden_dim: 256
+  lr: 3.0e-4
+  actor_lr_schedule: cosine
+  bc_steps: 200000
+  iql_steps: 300000     # success is ~1.0 from ~150-200k steps on
+  eval_every: 50000
+  eval_episodes: 20
+  final_episodes: 50
+  episodes_per_cell: 3
+  discount: 0.99
+  tau: 0.005
+  expectile: 0.7
+  beta: 3.0
+  max_weight: 100.0
+
+# No online section: offline BC and IQL already reach ~99% success, so there is nothing for fine-tuning to
+# improve (scripts/run.py and the notebook skip the online part when this section is missing).

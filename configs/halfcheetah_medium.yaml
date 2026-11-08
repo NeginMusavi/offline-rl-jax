@@ -1,0 +1,37 @@
+# HalfCheetah, Minari "medium" data (a TQC policy trained for 6M steps: fast and near-expert, not D4RL's medium).
+# The easiest task: the cheetah cannot fall, so episodes never end early.
+# IQL hyperparameters: the official IQL values for MuJoCo locomotion.
+name: halfcheetah_medium
+dataset_id: mujoco/halfcheetah/medium-v0
+seeds: [0, 1, 2]
+
+task:
+  normalize_reward: true        # rewards * 1000 / (max - min episode return), as in the official IQL code
+
+offline:
+  batch_size: 256
+  hidden_dim: 256
+  lr: 3.0e-4
+  actor_lr_schedule: cosine
+  bc_steps: 1500000
+  iql_steps: 1500000
+  eval_every: 50000
+  eval_episodes: 10              # per seed, during training
+  final_episodes: 20             # per seed, final test
+  episodes_per_cell: 3           # (maze tasks only)
+  discount: 0.99
+  tau: 0.005
+  expectile: 0.7
+  beta: 3.0
+  max_weight: 100.0
+
+online:
+  online_steps: 1000000          # environment steps per seed
+  envs_per_seed: 4
+  chunk: 2000                    # collect this many transitions per seed, then train on them
+  updates_per_step: 1
+  explore_temperature: 0.3       # noise = temperature x policy std (1.0 gave exploration returns ~3-6k vs ~13k)
+  reset_on_flip: false
+  eval_every: 50000
+  eval_episodes: 10
+  final_episodes: 20

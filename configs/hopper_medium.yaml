@@ -1,0 +1,37 @@
+# Hopper, Minari "medium" data (a SAC policy trained for 4M steps). The hopper can fall, which ends the episode:
+# this also tests terminal handling.
+# IQL hyperparameters: the official IQL values for MuJoCo locomotion.
+name: hopper_medium
+dataset_id: mujoco/hopper/medium-v0
+seeds: [0, 1, 2]
+
+task:
+  normalize_reward: true
+
+offline:
+  batch_size: 256
+  hidden_dim: 256
+  lr: 3.0e-4
+  actor_lr_schedule: cosine
+  bc_steps: 1000000
+  iql_steps: 1000000
+  eval_every: 50000
+  eval_episodes: 10
+  final_episodes: 20
+  episodes_per_cell: 3
+  discount: 0.99
+  tau: 0.005
+  expectile: 0.7
+  beta: 3.0
+  max_weight: 100.0
+
+online:
+  online_steps: 300000           # environment steps per seed (the gain came within ~100k)
+  envs_per_seed: 4
+  chunk: 2000
+  updates_per_step: 1
+  explore_temperature: 1.0       # noise = temperature x policy std; here noisy exploration helped: its falls teach the critic
+  reset_on_flip: false
+  eval_every: 50000
+  eval_episodes: 10
+  final_episodes: 20
